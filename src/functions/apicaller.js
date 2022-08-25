@@ -1,3 +1,6 @@
+import { GPSDataProcess } from './dataprocesser'
+
+
 export const CallCEIBALoginAPI = async ( username, password) => {
     try {
         const response = await fetch(`https://eye2a.tnts.com.sg:22056/api/v1/basic/key?username=${username}&password=${password}`)
@@ -19,32 +22,7 @@ export const CALLCEIBADeviceList = async( key ) => {
     }
 }
 
-export const GPSDataProcess = (dataTobeProcessed) => {
-    let speedholder = 0
-    const processedData = dataTobeProcessed.data.map((item, index) => {
-        if(index === 0 || index === dataTobeProcessed.data.length - 1) {
-            speedholder = item.speed
-            return item
-        }else {
-            if(speedholder === 0 && item.speed === 0) {
-                return null
-            }else if(speedholder === 0 && item.speed > 10){
-                speedholder = item.speed
-                return item
-            }else if(speedholder > 0 && item.speed === 0){
-                speedholder = item.speed
-                return item
-            }
-        }
-    })
-
-    const preFinalData = processedData.filter(item => {
-        return item
-    })
-    return preFinalData
-}
-
-export const CALLCEIBAGPSDetails = async( key, terid, searchDate ) => {
+export const CALLCEIBAGPSDetails = async( key, terid, searchDate, carplate ) => {
     try {
         const response = await fetch(`https://eye2a.tnts.com.sg:22056/api/v1/basic/gps/detail`, {
             method: "POST",
@@ -59,10 +37,20 @@ export const CALLCEIBAGPSDetails = async( key, terid, searchDate ) => {
             })
         })
         const data = await response.json()
-        const finalData = await GPSDataProcess(data)
+        const finalData = await GPSDataProcess(data, carplate)
         return finalData
     }catch(error) {
         console.log(error)
     }
 }
 
+export const CALLGoogleGeoLocationAPI = async (coordinates) => {
+    try {
+        const key = "AIzaSyDr5VKsAqZqgN8zfppjow65NxlgfiB8pds"
+        const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordinates.latitude},${coordinates.longitude}&key=${key}`)
+        const data = await response.json()
+        return data
+    }catch(error){
+        return error
+    }
+}

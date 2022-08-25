@@ -1,7 +1,8 @@
 .home-page-container {
     display: grid;
     grid-template-columns: 1fr 5fr;
-    grid-gap: .5rem
+    grid-gap: .5rem;
+
 }
 
 .inputdate-container {
@@ -11,7 +12,12 @@
 }
 
 .device-details {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr;
+    
+}
 
+.small-details {
+    display: flex;
+    flex-direction: row;
 }
