@@ -27,11 +27,11 @@ export const calculateDuration = (items) => {
 
     for(let i = 1; i < items.length; i++){
         if(items[i]["speed"] === 0){
-            let duration = dateToMillis(items[i]["gpstime"]) - dateToMillis(items[i-1]["gpstime"])
+            let duration = dateToMillis(items[i]["time"]) - dateToMillis(items[i-1]["time"])
             totalDuration += duration
             drivingDuration += duration
         }else if(items[i]["speed"] > 0){
-            let duration = dateToMillis(items[i]["gpstime"]) - dateToMillis(items[i-1]["gpstime"])
+            let duration = dateToMillis(items[i]["time"]) - dateToMillis(items[i-1]["time"])
             totalDuration += duration
             idleDuration += duration
         }
@@ -48,87 +48,207 @@ export const calculateDuration = (items) => {
 export const GPSDataProcess = async (dataTobeProcessed, carplate) => {
     let speedholder = 0
     let maxspeed = 0
-    let locationHolder = {
-        latitude: "",
-        longitude: ""
-    }
-    let maxspeedlist = []
+
     let threshold = 5 * 60 * 1000; // Milliseconds
-    let previousTime = 0;
+
+    let accumulateTimerForStop = 0
+    let timeHolderForStop = 0
+    let processingStatusForStopAccTimer = false
+    let alreadySendTemp = false
+
+    let tempHolder = null;
+    let currentHolder = null;
+
+    let startStopIndex = 0
+    let gotTemp = false
 
     const processedData = dataTobeProcessed.data.map((item, index) => {
-        let distance = haversine(locationHolder, {"latitude": item.gpslat, "longitude": item.gpslng}, { unit: 'km'});
-        if(index === 0) {
-            if(item.speed !== 0) {
-                maxspeed = item.speed
-            }else {
-                item["maxSpeed"] = 0
-            }
+        if(item.speed > maxspeed){
+            maxspeed = item.speed
+        }
+        if(index === 0){
             speedholder = item.speed
-            previousTime = dateToMillis(item.gpstime)
-            locationHolder.latitude = item.gpslat
-            locationHolder.longitude = item.gpslng
-            return item
-        }
-        else {
-            if(item.speed > maxspeed && speedholder > 0 ){
-                maxspeed = item.speed
+            currentHolder = Object.assign({}, item)
+            if(item.speed === 0 && processingStatusForStopAccTimer === false){
+                timeHolderForStop = dateToMillis(item["time"])
             }
-            // if previous is stop, now is driving, check distance more than 1km, yes then return else ignore
-            // if previous is stop, now is still stop, return null
-            // if previous is driving, now stop, return with max speed and reset
-            // if previous is driving, now still driving, capture max speed, then return null
+        }else if(index === dataTobeProcessed.data.length-1 ){
+            if(speedholder === 0 && item.speed !== 0 && accumulateTimerForStop >= threshold){
+                let temporary = Object.assign({}, currentHolder)
+                temporary.maxSpeed = 0
+                return temporary 
+            }
+            if(speedholder !== 0 && item.speed === 0 && gotTemp === true){
+                let temporary = Object.assign({}, tempHolder)
+                temporary["maxSpeed"] = maxspeed
+                return temporary
+            }
+            if(speedholder === 0 && item.speed === 0 && gotTemp === true){
+                accumulateTimerForStop = dateToMillis(item.time) - timeHolderForStop
+                if(accumulateTimerForStop < threshold){
+                    let temporary = Object.assign({}, currentHolder)
+                    temporary.maxSpeed = 0
+                    return temporary
+                }else {
+                    let temporary2 = Object.assign({}, tempHolder)
+                    temporary2["maxSpeed"] = maxspeed
+                    return temporary2
+                }
 
-            if(speedholder === 0 && item.speed > 5 && (dateToMillis(item.gpstime) - previousTime) >= threshold ){
-                if(distance > 1){
-                    speedholder = item.speed
-                    previousTime = dateToMillis(item.gpstime)
-                    maxspeed = item.speed
-                    locationHolder.latitude = item.gpslat
-                    locationHolder.longitude = item.gpslng
-                    return item
-                }else {
-                    return null
-                }
-            }else if(speedholder !== 0 && item.speed === 0 && (dateToMillis(item.gpstime) - previousTime) >= threshold){
-                if(distance > 1){
-                    maxspeedlist.push(maxspeed)
-                    speedholder = item.speed
-                    previousTime = dateToMillis(item.gpstime)
-                    locationHolder.latitude = item.gpslat
-                    locationHolder.longitude = item.gpslng
-                    maxspeed = 0
-                    item["maxSpeed"] = 0
-                    return item
-                }else {
-                    return null
-                }
             }
+            if(speedholder !== 0 && item.speed !== 0){
+                let temporary2 = Object.assign({}, currentHolder)
+                temporary2["maxSpeed"] = maxspeed
+                return temporary2
+            }
+        }else {
+            if(speedholder > 0 && item.speed === 0){
+                alreadySendTemp = false
+                tempHolder = Object.assign({}, currentHolder)
+                gotTemp = true
+                currentHolder = Object.assign({}, item)
+                speedholder = currentHolder.speed
+                timeHolderForStop = dateToMillis(item["time"])
+                startStopIndex = index
+                processingStatusForStopAccTimer = true
+            }
+
+            if(speedholder === 0 && item.speed === 0){
+                accumulateTimerForStop = dateToMillis(item.time) - timeHolderForStop
+            }
+
+            if(alreadySendTemp === false && accumulateTimerForStop >= threshold && processingStatusForStopAccTimer === true && gotTemp === true){
+                alreadySendTemp = true;
+                tempHolder["maxSpeed"] = maxspeed
+                maxspeed = 0
+                gotTemp = false;
+                return tempHolder
+            }
+
+            // If threshold not enough then met driving
+            if(speedholder === 0 && item.speed > 0 && accumulateTimerForStop < threshold && gotTemp === true){
+                currentHolder = Object.assign({}, tempHolder)
+                speedholder = currentHolder.speed
+                processingStatusForStopAccTimer = false
+                accumulateTimerForStop = 0
+                alreadySendTemp = false
+                timeHolderForStop = 0
+                gotTemp = false
+            }else if(speedholder === 0 && item.speed > 0 && accumulateTimerForStop >= threshold) {
+                let temporary = Object.assign({}, currentHolder)
+                temporary.maxSpeed = 0
+                currentHolder = Object.assign({}, item)
+                speedholder = item.speed
+                processingStatusForStopAccTimer = false
+                accumulateTimerForStop = 0
+                timeHolderForStop = 0
+                alreadySendTemp = false
+                return temporary 
+            }
+                                
         }
+
+        return null
     })
+    
+    // if(dataTobeProcessed.data.length !== 0){
+    //     for(let i = 0; i < dataTobeProcessed.data.length; i++){
+    //         if(item.speed > maxspeed){
+    //             maxspeed = dataTobeProcessed.data[i]["speed"]
+    //         }
+    
+    //         if(i === 0){
+    //             speedholder = dataTobeProcessed.data[i]["speed"]
+    //             previousTime = dateToMillis(dataTobeProcessed.data[i]["time"])
+    //             currentHolder = Object.assign({}, dataTobeProcessed.data[i])
+    //             if(dataTobeProcessed.data[i]["speed"] > maxspeed){
+    //                 maxspeed = dataTobeProcessed.data[i]["speed"]
+    //             }
+    //             if(dataTobeProcessed.data[i]["speed"] === 0 && processingStatusForStopAccTimer === false){
+    //                 timeHolderForStop = dateToMillis(dataTobeProcessed.data[i]["gpstime"])
+    //             }
+    //         }
+    //         else {
+    //             // Tackle if it is first time there is stop
+    //             if(dataTobeProcessed.data[i]["speed"] === 0 && processingStatusForStopAccTimer === false && timeHolderForStop === 0){
+    //                 timeHolderForStop = dateToMillis(dataTobeProcessed.data[i]["gpstime"])
+    //             }
+    
+    //             // Get Accumulate Timer for Stopping
+    //             if(speedholder === 0 && dataTobeProcessed.data[i]["speed"] === 0){
+    //                 accumulateTimerForStop = accumulateTimerForStop + ( dateToMillis(dataTobeProcessed.data[i]["gpstime"]) - timeHolderForStop)
+    //                 processingStatusForStopAccTimer = true
+    //                 if(accumulateTimerForStop >= threshold && alreadySendTemp === false && processingStatusForStopAccTimer === true) {
+    //                     processedData.push(Object.assign({}, tempHolder))
+    //                     processedData[processedData.length-1]["maxspeed"] = maxspeed
+    //                     maxspeed = 0
+    //                     processingStatusForStopAccTimer = false
+    //                     alreadySendTemp = true
+    //                 }
+    //             }else if(speedholder === 0 && dataTobeProcessed.data[i]["speed"] > 0){
+    //                 processedData.push(Object.assign({}, currentHolder))
+    //                 processedData[processedData.length-1]["maxspeed"] = 0
+    //                 maxspeed = 0
+    //                 alreadySendTemp = false
+    //             }
+    
+    //             if(speedholder > 0 && dataTobeProcessed.data[i]["speed"] === 0){
+    //                 tempHolder = Object.assign({}, currentHolder)
+    //                 currentHolder = Object.assign({}, dataTobeProcessed.data[i])
+    //                 speedholder = currentHolder["speed"]
+    //             }
+    //         }
+    //     }
+    // }
 
+
+    // const processedData = dataTobeProcessed.data.map((item, index) => {
+    //     if(item.speed > maxspeed){
+    //         maxspeed = item.speed
+    //     }
+
+    //     if(index === 0) {
+    //         previousTime = dateToMillis(item.gpstime)
+    //         speedholder = parseInt(item.speed)
+    //         locationHolder.latitude = parseFloat(item.gpslat)
+    //         locationHolder.longitude = parseFloat(item.gpslng)
+    //         itemHolder = item
+    //     } else if( speedholder !== 0 && item.speed === 0 && (dateToMillis(item.gpstime) - previousTime > threshold)  && (haversine(locationHolder, {"latitude": item.gpslat, "longitude": item.gpslng}, {unit: 'km'}) > 1)){ // if now come to stop when previous is driving, return the previousholder data with max speed, holder is current item now
+    //         previousTime = dateToMillis(item.gpstime)
+    //         speedholder = parseInt(item.speed)
+    //         itemHolder["maxSpeed"] = maxspeed
+    //         maxspeed = 0
+    //         let itemToBeReturn = Object.assign({}, itemHolder)
+    //         itemHolder = item
+    //         locationHolder.longitude = item.gpslat
+    //         locationHolder.longitude = item.gpslng
+    //         return itemToBeReturn
+    //     }else if( speedholder === 0 && item.speed !== 0 && (dateToMillis(item.gpstime) - previousTime > threshold)){
+    //         previousTime = dateToMillis(item.gpstime)
+    //         speedholder =  parseInt(item.speed)
+    //         itemHolder["maxSpeed"] = 0
+    //         let itemToBeReturn = Object.assign({}, itemHolder)
+    //         itemHolder = item
+    //         locationHolder.longitude = item.gpslat
+    //         locationHolder.longitude = item.gpslng
+    //         return itemToBeReturn            
+    //     }
+    //     return null
+    // })
+
+    // console.log(processedData)
+    
     const preFinalData = processedData.filter(item => {
         return item
     })
 
-    const dataAfterMaxSpeed = preFinalData.map((item) => {
-        if(item["maxSpeed"] !== 0) {
-            item["maxSpeed"] = maxspeedlist[0]
-            maxspeedlist.shift()
-            return item
-        }else {
-            return item
-        }
-    })
-
-    const dataAfterDuration = dataAfterMaxSpeed.map((item,index) => {
-        if(index === dataAfterMaxSpeed.length - 1){
+    const dataAfterDuration = preFinalData.map((item,index) => {
+        if(index === preFinalData.length - 1){
             item["duration"] = "Last Data of the day"
             item["maxSpeed"] = item.speed
             return item
-
         }else {
-            let durationDiff =  dateToMillis(dataAfterMaxSpeed[index+1]["time"]) - dateToMillis(item["time"])
+            let durationDiff =  dateToMillis(preFinalData[index+1]["time"]) - dateToMillis(item["time"])
             item["duration"] = msToHMS(durationDiff)
             return item
         }
@@ -147,7 +267,6 @@ export const GPSDataProcess = async (dataTobeProcessed, carplate) => {
                 item["location"] = data.results[0]["formatted_address"]
             }
             return item
-
         }catch(err) {
             console.log(err)
         }

@@ -16,6 +16,18 @@ export const CALLCEIBADeviceList = async( key ) => {
     try {
         const response = await fetch(`https://eye2a.tnts.com.sg:22056/api/v1/basic/devices?key=${key}`)
         const data = await response.json()
+        const compare = (a,b) => {
+            if(a < b){
+                return -1
+            }
+            if(a > b){
+                return 1
+            }
+            return 0
+        }
+        
+        data.data.sort((a,b) => compare(a.carlicence, b.carlicence))
+
         return data
     }catch(error) {
         console.log(error)

@@ -77,9 +77,9 @@ const Homepage = ({ apikey, isLogin }) => {
                         selectedDevice !== null ? 
                         <div className='small-details'>
                             <div>
-                                <h3>{`Serial Number: ${selectedDevice.deviceid}`}</h3>
-                                <h3>{`Vehicle Plate: ${selectedDevice.carlicence}`}</h3>
-                                <h3>{`Search Date: ${searchDate ? searchDate : "Haven't select Date"}`}</h3>
+                                <h4>{`Serial Number: ${selectedDevice.deviceid}`}</h4>
+                                <h4>{`Vehicle Plate: ${selectedDevice.carlicence}`}</h4>
+                                <h4>{`Search Date: ${searchDate ? searchDate : "Haven't select Date"}`}</h4>
                             </div>
                             {
                                 durationData !== null ? (
@@ -118,7 +118,7 @@ const Homepage = ({ apikey, isLogin }) => {
                                         return (
                                             <tr key={`row-${index}`}>
                                                 <td>{queryVehicle}</td>
-                                                <td>{item.gpstime}</td>
+                                                <td>{item.time}</td>
                                                 <td>{item.location === null ? <p style={{"color": "red"}}>Failed To Analyze</p> : item.location}</td>
                                                 <td>{item.maxSpeed}</td>
                                                 <td>{item.duration}</td>
