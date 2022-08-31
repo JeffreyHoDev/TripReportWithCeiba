@@ -77,16 +77,16 @@ const Homepage = ({ apikey, isLogin }) => {
                         selectedDevice !== null ? 
                         <div className='small-details'>
                             <div>
-                                <h4>{`Serial Number: ${selectedDevice.deviceid}`}</h4>
-                                <h4>{`Vehicle Plate: ${selectedDevice.carlicence}`}</h4>
-                                <h4>{`Search Date: ${searchDate ? searchDate : "Haven't select Date"}`}</h4>
+                                <h5>{`Serial Number: ${selectedDevice.deviceid}`}</h5>
+                                <h5>{`Vehicle Plate: ${selectedDevice.carlicence}`}</h5>
+                                <h5>{`Search Date: ${searchDate ? searchDate : "Haven't select Date"}`}</h5>
                             </div>
                             {
                                 durationData !== null ? (
                                     <div>
-                                        <h4>{`Total Duration: ${durationData.totalDuration}`}</h4>
-                                        <h4>{`Stopping Duration: ${durationData.idleDuration}`}</h4>
-                                        <h4>{`Driving Duration: ${durationData.drivingDuration}`}</h4>
+                                        <h5>{`Total Duration: ${durationData.totalDuration}`}</h5>
+                                        <h5>{`Stopping Duration: ${durationData.idleDuration}`}</h5>
+                                        <h5>{`Driving Duration: ${durationData.drivingDuration}`}</h5>
                                     </div>
                                 ): <div></div>
                             }
@@ -101,11 +101,11 @@ const Homepage = ({ apikey, isLogin }) => {
                             <span className="visually-hidden">Loading...</span>
                         </Spinner> : 
                         processedData !== null ? 
-                        <Table striped bordered hover responsive="sm">
+                        <Table striped borderless="true" hover responsive="sm">
                             <thead>
                                 <tr>
                                     <th>Vehicle Plate</th>
-                                    <th>Time</th>
+                                    <th>Start Time</th>
                                     <th>Location</th>
                                     <th>Max Speed(km/h)</th>
                                     <th>Duration</th>
@@ -119,7 +119,7 @@ const Homepage = ({ apikey, isLogin }) => {
                                             <tr key={`row-${index}`}>
                                                 <td>{queryVehicle}</td>
                                                 <td>{item.time}</td>
-                                                <td>{item.location === null ? <p style={{"color": "red"}}>Failed To Analyze</p> : item.location}</td>
+                                                <td>{item.location === null ? <p style={{"color": "red"}}>Failed To Analyze</p> : item.maxSpeed === 0? <p style={{"color": "grey"}}>{item.location}</p> : <p style={{"color": "green"}}>{item.location}</p>}</td>
                                                 <td>{item.maxSpeed}</td>
                                                 <td>{item.duration}</td>
                                                 <td>{item.maxSpeed === 0 ? <p style={{"color": "red"}}>Stopping</p> : <p style={{"color": "green"}}>Driving</p>}</td>
