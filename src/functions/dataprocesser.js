@@ -1,4 +1,3 @@
-import haversine from 'haversine'
 import { CALLGoogleGeoLocationAPI } from './apicaller'
 
 export const dateToMillis = (date) => {
@@ -49,7 +48,7 @@ export const GPSDataProcess = async (dataTobeProcessed, carplate) => {
     let speedholder = 0
     let maxspeed = 0
 
-    let threshold = 5 * 60 * 1000; // Milliseconds
+    let threshold = 3 * 60 * 1000; // Milliseconds
 
     let accumulateTimerForStop = 0
     let timeHolderForStop = 0
@@ -59,7 +58,6 @@ export const GPSDataProcess = async (dataTobeProcessed, carplate) => {
     let tempHolder = null;
     let currentHolder = null;
 
-    let startStopIndex = 0
     let gotTemp = false
 
     const processedData = dataTobeProcessed.data.map((item, index) => {
@@ -109,7 +107,6 @@ export const GPSDataProcess = async (dataTobeProcessed, carplate) => {
                 currentHolder = Object.assign({}, item)
                 speedholder = currentHolder.speed
                 timeHolderForStop = dateToMillis(item["time"])
-                startStopIndex = index
                 processingStatusForStopAccTimer = true
             }
 

@@ -63,6 +63,9 @@ export const CALLGoogleGeoLocationAPI = async (coordinates) => {
         const data = await response.json()
         return data
     }catch(error){
-        return error
+        
+        return {
+            "error_message": error
+        }
     }
 }

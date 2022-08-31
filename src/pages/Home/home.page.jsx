@@ -11,6 +11,9 @@ import Spinner from 'react-bootstrap/Spinner';
 import { useState, useEffect } from 'react'
 import './home.page.styles.css'
 
+import * as FileSaver from 'file-saver';
+import * as XLSX from 'xlsx';
+
 const Homepage = ({ apikey, isLogin }) => {
 
     const [deviceList, setDeviceList] = useState(null)
@@ -32,6 +35,17 @@ const Homepage = ({ apikey, isLogin }) => {
             setDurationData(data.durationData)
             setTripDataStatus(false)
         }
+    }
+
+    const exportExcel = () => {
+        const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+        const fileExtension = '.xlsx';
+
+        const ws = XLSX.utils.json_to_sheet(processedData);
+        const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
+        const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+        const data = new Blob([excelBuffer], {type: fileType});
+        FileSaver.saveAs(data, queryVehicle + fileExtension);
     }
 
     useEffect(() => {
@@ -67,10 +81,10 @@ const Homepage = ({ apikey, isLogin }) => {
         }
             <div className='home-page-container'>
                 <ListGroupComponent 
-                selectedDevice={selectedDevice} 
-                deviceList={deviceList} 
-                setSelectedDevice={setSelectedDevice} 
-                isLogin={isLogin}
+                    selectedDevice={selectedDevice} 
+                    deviceList={deviceList} 
+                    setSelectedDevice={setSelectedDevice} 
+                    isLogin={isLogin}
                 />
                 <div className='device-details'>
                     {
@@ -90,6 +104,12 @@ const Homepage = ({ apikey, isLogin }) => {
                                     </div>
                                 ): <div></div>
                             }
+                            {
+                                queryVehicle && !isQueryingData ? <div className='button-groups'>
+                                    <Button variant="success" onClick={() => exportExcel()}>Export Excel {`${queryVehicle}`}</Button>
+                                </div> : null
+                            }
+
                         </div>
                         : null
                     }
@@ -97,19 +117,24 @@ const Homepage = ({ apikey, isLogin }) => {
                     <div className='tripdetail-container'>
                     {
                         isQueryingData ? 
-                        <Spinner animation="border" role="status">
-                            <span className="visually-hidden">Loading...</span>
-                        </Spinner> : 
+                        <>
+                            <Spinner animation="border" role="status">
+                                <span className="visually-hidden">Loading...</span>
+                            </Spinner>
+                            <p>If it takes too long, please refresh and try again.</p>
+                        </>: 
                         processedData !== null ? 
-                        <Table striped borderless="true" hover responsive="sm">
+                        <Table striped bordered hover responsive="sm">
                             <thead>
                                 <tr>
+                                    <th>Index</th>
                                     <th>Vehicle Plate</th>
                                     <th>Start Time</th>
                                     <th>Location</th>
                                     <th>Max Speed(km/h)</th>
                                     <th>Duration</th>
                                     <th>Status</th>
+                                    <th>Map View</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -117,12 +142,15 @@ const Homepage = ({ apikey, isLogin }) => {
                                     processedData.map((item, index) => {
                                         return (
                                             <tr key={`row-${index}`}>
+                                                <td>{index + 1}</td>
                                                 <td>{queryVehicle}</td>
                                                 <td>{item.time}</td>
                                                 <td>{item.location === null ? <p style={{"color": "red"}}>Failed To Analyze</p> : item.maxSpeed === 0? <p style={{"color": "grey"}}>{item.location}</p> : <p style={{"color": "green"}}>{item.location}</p>}</td>
                                                 <td>{item.maxSpeed}</td>
                                                 <td>{item.duration}</td>
                                                 <td>{item.maxSpeed === 0 ? <p style={{"color": "red"}}>Stopping</p> : <p style={{"color": "green"}}>Driving</p>}</td>
+                                                {/* <td><a href={`https://maps.google.com?q=${item.gpslat},${item.gpslng}`} target="_blank" rel="noreferrer" >Map</a></td> */}
+                                                <td><a href={`https://maps.google.com?q=${item.location}`} target="_blank" rel="noreferrer" >Map</a></td>
                                             </tr>
                                         )
                                     })
