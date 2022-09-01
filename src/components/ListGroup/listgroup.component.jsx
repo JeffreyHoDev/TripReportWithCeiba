@@ -2,12 +2,11 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Spinner from 'react-bootstrap/Spinner';
 
 
-
 import './listgroup.styles.css'
 
-const ListGroupComponent = ({ deviceList, setSelectedDevice, isLogin, selectedDevice }) => {
+const ListGroupComponent = ({ deviceList, setSelectedDevice, isLogin }) => {
 
-    
+
     return (
     <>
         <div className='listgroup-component-container'>
@@ -19,7 +18,7 @@ const ListGroupComponent = ({ deviceList, setSelectedDevice, isLogin, selectedDe
                             <span className="visually-hidden">Loading...</span>
                         </Spinner>
                     )
-                    :
+                    : 
                     <div>
                         <ListGroup>
                         {
@@ -32,7 +31,7 @@ const ListGroupComponent = ({ deviceList, setSelectedDevice, isLogin, selectedDe
                             })
                         }
                         </ListGroup>
-                    </div> 
+                    </div>                     
                 : null
             }
         </div>

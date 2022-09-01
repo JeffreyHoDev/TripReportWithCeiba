@@ -45,7 +45,7 @@ const Homepage = ({ apikey, isLogin }) => {
         const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
         const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
         const data = new Blob([excelBuffer], {type: fileType});
-        FileSaver.saveAs(data, queryVehicle + fileExtension);
+        FileSaver.saveAs(data, `${queryVehicle}-${searchDate}${fileExtension}`);
     }
 
     useEffect(() => {
@@ -149,7 +149,6 @@ const Homepage = ({ apikey, isLogin }) => {
                                                 <td>{item.maxSpeed}</td>
                                                 <td>{item.duration}</td>
                                                 <td>{item.maxSpeed === 0 ? <p style={{"color": "red"}}>Stopping</p> : <p style={{"color": "green"}}>Driving</p>}</td>
-                                                {/* <td><a href={`https://maps.google.com?q=${item.gpslat},${item.gpslng}`} target="_blank" rel="noreferrer" >Map</a></td> */}
                                                 <td><a href={`https://maps.google.com?q=${item.location}`} target="_blank" rel="noreferrer" >Map</a></td>
                                             </tr>
                                         )

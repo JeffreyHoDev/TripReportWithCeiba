@@ -1,6 +1,5 @@
 import { GPSDataProcess } from './dataprocesser'
 
-
 export const CallCEIBALoginAPI = async ( username, password) => {
     try {
         const response = await fetch(`https://eye2a.tnts.com.sg:22056/api/v1/basic/key?username=${username}&password=${password}`)

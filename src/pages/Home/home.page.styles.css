@@ -7,7 +7,7 @@
 }
 
 .inputdate-container {
-    height: 5vh;
+    height: max-content;
     display: flex;
     flex-direction: row;
     justify-content: center;

@@ -1,3 +1,8 @@
+.listgroup {
+    display: flex;
+    flex-direction: column;
+}
+
 .listgroup-component-container {
     height: 90vh;
     overflow: scroll;
