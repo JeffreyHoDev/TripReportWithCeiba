@@ -24,7 +24,7 @@ const ListGroupComponent = ({ deviceList, setSelectedDevice, isLogin }) => {
                         {
                             deviceList[0].data.map((item,index) => {
                                 return (
-                                    <ListGroup.Item key={`device${index}`} action href={`#link${index}`} onClick={() => setSelectedDevice(item)}>
+                                    <ListGroup.Item key={`device${index}`} action href={`#${index}`} onClick={() => setSelectedDevice(item)}>
                                         {item.carlicence}
                                     </ListGroup.Item>
                                 )

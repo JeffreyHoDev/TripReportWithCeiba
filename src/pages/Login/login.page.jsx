@@ -3,13 +3,16 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 
+import { useNavigate } from 'react-router-dom'
+
 import { useState } from 'react'
 
 import './login.page.styles.css'
 
 import { CallCEIBALoginAPI } from '../../functions/apicaller'
+import { useEffect } from 'react';
 
-const LoginPage = ({ isLogin, setLoginStatus, setKey }) => {
+const LoginPage = ({ isLogin, setLoginStatus, setKey, setLoginUser }) => {
 
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -22,6 +25,7 @@ const LoginPage = ({ isLogin, setLoginStatus, setKey }) => {
             if(data.errorcode === 200){
                 setFetchingStatus(false)
                 setKey(data.data.key)
+                setLoginUser(username)
                 setLoginStatus(true)
                 
             }else {
@@ -30,6 +34,16 @@ const LoginPage = ({ isLogin, setLoginStatus, setKey }) => {
             }
 
     }
+
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if(isLogin){
+            navigate('/home')
+        }else {
+            navigate('/')
+        }
+    }, [isLogin, navigate])
 
     return (
         <>

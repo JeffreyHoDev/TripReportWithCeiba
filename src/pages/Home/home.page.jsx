@@ -62,8 +62,9 @@ const Homepage = ({ apikey, isLogin }) => {
 
     return (
         <>
+            <h2>Trip Report</h2>
         {
-            !isLogin ? null 
+            !isLogin ? <></> 
             :            
             <div className='inputdate-container'>
                 <InputGroup className="mb-3">
