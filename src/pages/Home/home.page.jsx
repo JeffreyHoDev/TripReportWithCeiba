@@ -1,4 +1,4 @@
-import { CALLCEIBADeviceList, CALLCEIBAGPSDetails } from '../../functions/apicaller'
+import { CALLCEIBADeviceList } from '../../functions/apicaller'
 
 import ListGroupComponent from '../../components/ListGroup/listgroup.component'
 
@@ -13,6 +13,8 @@ import './home.page.styles.css'
 
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
+
+import { TripReportProcessStart } from '../../functions/main';
 
 const Homepage = ({ apikey, isLogin }) => {
 
@@ -29,9 +31,9 @@ const Homepage = ({ apikey, isLogin }) => {
             alert("Please select a vehicle and choose a date")
         }else {
             setTripDataStatus(true)
-            const data = await CALLCEIBAGPSDetails(apikey, selectedDevice.deviceid, searchDate, selectedDevice.carlicence)
+            const data = await TripReportProcessStart(apikey, selectedDevice.deviceid, searchDate, selectedDevice.carlicence)
             setQueryVehicle(selectedDevice.carlicence)
-            setProcessedData([].concat(data.dataAfterMap))
+            setProcessedData([].concat(data.finalData))
             setDurationData(data.durationData)
             setTripDataStatus(false)
         }

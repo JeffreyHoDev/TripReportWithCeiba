@@ -25,7 +25,7 @@ const LoginPage = ({ isLogin, setLoginStatus, setKey }) => {
                 setLoginStatus(true)
                 
             }else {
-                console.log(data)
+                alert("Wrong credentials. Please provide correct username and password.")
                 setFetchingStatus(false)
             }
 

@@ -1,5 +1,3 @@
-import { GPSDataProcess } from './dataprocesser'
-
 export const CallCEIBALoginAPI = async ( username, password) => {
     try {
         const response = await fetch(`https://eye2a.tnts.com.sg:22056/api/v1/basic/key?username=${username}&password=${password}`)
@@ -48,8 +46,8 @@ export const CALLCEIBAGPSDetails = async( key, terid, searchDate, carplate ) => 
             })
         })
         const data = await response.json()
-        const finalData = await GPSDataProcess(data, carplate)
-        return finalData
+        
+        return data
     }catch(error) {
         console.log(error)
     }
