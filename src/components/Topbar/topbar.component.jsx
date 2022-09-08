@@ -13,6 +13,11 @@ const Topbar = ({ loginUser, isLogin }) => {
                             </Link>
                         </div>
                         <div className='nav'>
+                            <Link to="/user-management" className='nav-item'>
+                                User Management
+                            </Link>
+                        </div>
+                        <div className='nav'>
                             <Link to="/scheduletask" className='nav-item'>
                                 Schedule Task
                             </Link>
