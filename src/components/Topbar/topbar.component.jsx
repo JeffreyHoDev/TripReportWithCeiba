@@ -6,7 +6,7 @@ const Topbar = ({ loginUser, isLogin }) => {
         <>
             {
                 isLogin && loginUser ? 
-                    <div className='topbar-container'>
+                    <nav className='topbar-container'>
                         <div className='nav'>
                             <Link to="/home" className='nav-item'>
                                 Trip Report
@@ -29,7 +29,7 @@ const Topbar = ({ loginUser, isLogin }) => {
                             <img src={require('../../assets/user-icon.png')} alt="user-icon"/>
                             <p>{loginUser}</p>
                         </div>
-                    </div>
+                    </nav>
                 : null
             }
         </>

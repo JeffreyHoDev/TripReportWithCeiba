@@ -1,0 +1,12 @@
+.add-user-link-container {
+    display: inline-block;
+    padding: .6rem 1rem;
+    margin-top: .5rem;
+    margin-bottom: .5rem;
+    background-color: #0dcaf0;
+}
+
+.add-user-link {
+    color: white;
+    text-decoration: none;
+}

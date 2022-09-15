@@ -1,10 +1,15 @@
 import './usermanagement.styles.css'
 import Table from 'react-bootstrap/Table';
 
+import { Link } from 'react-router-dom'
+
 const UserManagementPage = () => {
 
     return (
       <>
+        <div className='add-user-link-container'>
+            <Link to="/user-management/add-user" className='add-user-link'>ADD USER</Link>
+        </div>
         <Table striped bordered hover responsive="sm">
             <thead>
                 <tr>
