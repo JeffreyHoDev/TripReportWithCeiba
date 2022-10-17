@@ -55,7 +55,6 @@ export const CALLCEIBAGPSDetails = async( key, terid, searchDate, carplate ) => 
 }
 
 export const CALLGoogleGeoLocationAPI = async (coordinates) => {
-    console.log(process.env)
     try {
         const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordinates.latitude},${coordinates.longitude}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`)
         const data = await response.json()
