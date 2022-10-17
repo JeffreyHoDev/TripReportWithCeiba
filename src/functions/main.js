@@ -1,5 +1,5 @@
 import { CALLCEIBAGPSDetails } from './apicaller'
-import { processGPS, processDuration, processLocationName } from './dataprocesser'
+import { processGPS, processDuration, processLocationName } from './dataprocesser2'
 import { calculateDuration, clearNullItem } from './util'
 
 

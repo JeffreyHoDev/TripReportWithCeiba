@@ -1,0 +1,17 @@
+.add-user-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 80vh;
+    justify-content: center;
+}
+
+.role-dropdown {
+    padding: .8rem 1rem;
+    font-size: large;
+    text-align: center;
+}
+
+.email-input-group {
+    display: flex;
+}

@@ -22,19 +22,19 @@ export const processGPS = (dataset) => {
         if(item.speed > maxspeed){
             maxspeed = item.speed
         }
-        if(index === 0){
+        if(index === 0){ // If first data
             speedholder = item.speed
             currentHolder = Object.assign({}, item)
             if(item.speed === 0 && processingStatusForStopAccTimer === false){
                 timeHolderForStop = dateToMillis(item["time"])
             }
-        }else if(index === dataset.data.length-1 ){
-            if(speedholder === 0 && item.speed !== 0 && accumulateTimerForStop >= threshold){
+        }else if(index === dataset.data.length-1 ){  // if last data
+            if(speedholder === 0 && item.speed !== 0 && accumulateTimerForStop >= threshold){ // if now is already driving after stop exceed threshold
                 let temporary = Object.assign({}, currentHolder)
                 temporary.maxSpeed = 0
                 return temporary 
             }
-            if(speedholder !== 0 && item.speed === 0 && gotTemp === true){
+            if(speedholder !== 0 && item.speed === 0 && gotTemp === true){ // if now is stop and previously driving
                 let temporary = Object.assign({}, tempHolder)
                 temporary["maxSpeed"] = maxspeed
                 return temporary
@@ -58,7 +58,20 @@ export const processGPS = (dataset) => {
                 return temporary2
             }
         }else {
-            if(speedholder > 0 && item.speed === 0){
+            if(speedholder > 0 && item.speed === 0){ // temporary only occur when it comes to a stop
+                if(dateToMillis(item["time"]) - dateToMillis(currentHolder["time"]) > threshold){
+                    let newTemp = Object.assign({}, currentHolder)
+                    newTemp["maxSpeed"] = maxspeed;
+                    maxspeed = 0;
+                    alreadySendTemp = false
+                    tempHolder = Object.assign({}, currentHolder)
+                    gotTemp = true
+                    currentHolder = Object.assign({}, item)
+                    speedholder = currentHolder.speed
+                    timeHolderForStop = dateToMillis(item["time"])
+                    processingStatusForStopAccTimer = true
+                    return newTemp
+                }
                 alreadySendTemp = false
                 tempHolder = Object.assign({}, currentHolder)
                 gotTemp = true
