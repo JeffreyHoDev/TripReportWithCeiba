@@ -3,12 +3,12 @@ import { useState } from 'react'
 
 import LoginPage from './pages/Login/login.page'
 import Homepage from './pages/Home/home.page'
-import ScheduleTaskPage from './pages/ScheduleTask/scheduletask.page';
-import UserManagementPage from './pages/User/usermanagement.page';
+// import ScheduleTaskPage from './pages/ScheduleTask/scheduletask.page';
+// import UserManagementPage from './pages/User/usermanagement.page';
 
-import AddUserComponent from './components/addUser/addUser.component'
-import Topbar from './components/Topbar/topbar.component';
-import AddUserComponent from './components/addUser/addUser.component'
+// import AddUserComponent from './components/addUser/addUser.component'
+// import Topbar from './components/Topbar/topbar.component';
+// import AddUserComponent from './components/addUser/addUser.component'
 
 import { Routes, Route } from "react-router-dom";
 
