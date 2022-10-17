@@ -16,7 +16,6 @@ export const processGPS = (dataset) => {
     let gotTemp = false
 
     const processedData = dataset.data.map((item, index) => {
-        console.log(currentHolder)
         if(index === 0) {
             currentHolder = Object.assign({}, item)
             return null            
@@ -33,18 +32,18 @@ export const processGPS = (dataset) => {
                 currentHolder = Object.assign({}, item)
                 return newTemp
             }
-            console.log("Assign tempholder")
+
             gotTemp = true;
             tempHolder = Object.assign({}, currentHolder)
             currentHolder = Object.assign({}, item)
         }
 
         if(currentHolder["speed"] === 0 && item.speed === 0){
-            console.log("calculate accumulate timer")
+
             accumulateTimerForStop = dateToMillis(item["time"]) - dateToMillis(currentHolder["time"])
             
             if(accumulateTimerForStop >= threshold && gotTemp){
-                console.log("Push the temp holder")
+
                 tempHolder["maxSpeed"] = maxspeed
                 maxspeed = 0;
                 gotTemp = false
@@ -60,17 +59,17 @@ export const processGPS = (dataset) => {
                 return newTemp
             }
             if(accumulateTimerForStop < threshold && gotTemp){
-                console.log("reset current holder to temp holder")
+
                 gotTemp = false
                 currentHolder = Object.assign({}, tempHolder)
             }else if(accumulateTimerForStop < threshold && !gotTemp) {
-                console.log("If no temp and less than threshold")
+
                 let newTemp = Object.assign({}, currentHolder)
                 newTemp["maxSpeed"] = 0;
                 currentHolder = Object.assign({}, item)
                 return newTemp
             }else if(accumulateTimerForStop >= threshold){
-                console.log("push the stop record more than threshold")
+
                 let newTemp = Object.assign({}, currentHolder)
                 newTemp["maxSpeed"] = 0;
                 accumulateTimerForStop = 0

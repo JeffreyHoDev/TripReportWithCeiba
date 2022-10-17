@@ -10,7 +10,7 @@ import Homepage from './pages/Home/home.page'
 // import Topbar from './components/Topbar/topbar.component';
 // import AddUserComponent from './components/addUser/addUser.component'
 
-import { Routes, Route } from "react-router-dom";
+// import { Routes, Route } from "react-router-dom";
 
 function App() {
 
@@ -21,13 +21,16 @@ function App() {
   return (
     <div className="App">
       {/* <Topbar isLogin={isLogin} loginUser={loginUser}/> */}
-      <Routes>
+      <LoginPage setLoginStatus={setLoginStatus} isLogin={isLogin} setKey={setKey} setLoginUser={setLoginUser}/>
+      <Homepage apikey={apikey} isLogin={isLogin}/>
+      {/* <Routes>
+
         <Route path="/" element={<LoginPage setLoginStatus={setLoginStatus} isLogin={isLogin} setKey={setKey} setLoginUser={setLoginUser} />} />
-        <Route index path="/home" element={<Homepage apikey={apikey} isLogin={isLogin}/>}/>
+        <Route index path="/home" element={<Homepage apikey={apikey} isLogin={isLogin}/>}/> */}
         {/* <Route path="/scheduletask" element={<ScheduleTaskPage isLogin={isLogin} />} />
         <Route path="/user-management" element={<UserManagementPage />} />
         <Route path="/user-management/add-user" element={<AddUserComponent/>} /> */}
-      </Routes>
+      {/* </Routes> */}
     </div>
   );
 }

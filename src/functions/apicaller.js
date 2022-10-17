@@ -1,3 +1,4 @@
+
 export const CallCEIBALoginAPI = async ( username, password) => {
     try {
         const response = await fetch(`https://eye2a.tnts.com.sg:22056/api/v1/basic/key?username=${username}&password=${password}`)
@@ -54,6 +55,7 @@ export const CALLCEIBAGPSDetails = async( key, terid, searchDate, carplate ) => 
 }
 
 export const CALLGoogleGeoLocationAPI = async (coordinates) => {
+    console.log(process.env)
     try {
         const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordinates.latitude},${coordinates.longitude}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`)
         const data = await response.json()

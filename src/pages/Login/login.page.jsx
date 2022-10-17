@@ -3,7 +3,7 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 
-import { useNavigate } from 'react-router-dom'
+// import { useNavigate } from 'react-router-dom'
 
 import { useState } from 'react'
 
@@ -35,15 +35,15 @@ const LoginPage = ({ isLogin, setLoginStatus, setKey, setLoginUser }) => {
 
     }
 
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
 
-    useEffect(() => {
-        if(isLogin){
-            navigate('/home')
-        }else {
-            navigate('/')
-        }
-    }, [isLogin, navigate])
+    // useEffect(() => {
+    //     if(isLogin){
+    //         navigate('/home')
+    //     }else {
+    //         navigate('/')
+    //     }
+    // }, [isLogin, navigate])
 
     return (
         <>
