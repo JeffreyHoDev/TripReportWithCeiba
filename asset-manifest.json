@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/TripReportWithCeiba/static/css/main.b44978de.css",
-    "main.js": "/TripReportWithCeiba/static/js/main.66b1d2a6.js",
+    "main.js": "/TripReportWithCeiba/static/js/main.33912c4e.js",
     "static/js/787.2c070454.chunk.js": "/TripReportWithCeiba/static/js/787.2c070454.chunk.js",
     "index.html": "/TripReportWithCeiba/index.html",
     "main.b44978de.css.map": "/TripReportWithCeiba/static/css/main.b44978de.css.map",
-    "main.66b1d2a6.js.map": "/TripReportWithCeiba/static/js/main.66b1d2a6.js.map",
+    "main.33912c4e.js.map": "/TripReportWithCeiba/static/js/main.33912c4e.js.map",
     "787.2c070454.chunk.js.map": "/TripReportWithCeiba/static/js/787.2c070454.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.b44978de.css",
-    "static/js/main.66b1d2a6.js"
+    "static/js/main.33912c4e.js"
   ]
 }
