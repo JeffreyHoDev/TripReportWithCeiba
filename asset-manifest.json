@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/TripReportWithCeiba/static/css/main.b44978de.css",
-    "main.js": "/TripReportWithCeiba/static/js/main.afc68c8e.js",
-    "static/js/787.2c070454.chunk.js": "/TripReportWithCeiba/static/js/787.2c070454.chunk.js",
-    "index.html": "/TripReportWithCeiba/index.html",
-    "main.b44978de.css.map": "/TripReportWithCeiba/static/css/main.b44978de.css.map",
-    "main.afc68c8e.js.map": "/TripReportWithCeiba/static/js/main.afc68c8e.js.map",
-    "787.2c070454.chunk.js.map": "/TripReportWithCeiba/static/js/787.2c070454.chunk.js.map"
+    "main.css": "/static/css/main.b44978de.css",
+    "main.js": "/static/js/main.a36d5568.js",
+    "static/js/787.2c070454.chunk.js": "/static/js/787.2c070454.chunk.js",
+    "index.html": "/index.html",
+    "main.b44978de.css.map": "/static/css/main.b44978de.css.map",
+    "main.a36d5568.js.map": "/static/js/main.a36d5568.js.map",
+    "787.2c070454.chunk.js.map": "/static/js/787.2c070454.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.b44978de.css",
-    "static/js/main.afc68c8e.js"
+    "static/js/main.a36d5568.js"
   ]
 }
