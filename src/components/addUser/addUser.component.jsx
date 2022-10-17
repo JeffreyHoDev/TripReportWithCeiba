@@ -1,3 +1,4 @@
+
 import './adduser.styles.css'
 
 import Button from 'react-bootstrap/Button';
@@ -24,6 +25,7 @@ const AddUserComponent = () => {
         }else {
             console.log("submitted")
             navigate('/user-management')
+
         }
     }
 
@@ -62,6 +64,7 @@ const AddUserComponent = () => {
                     </Button>
                 </Form>
             </div>
+
         </>
     )
 }

@@ -6,6 +6,7 @@ import Homepage from './pages/Home/home.page'
 import ScheduleTaskPage from './pages/ScheduleTask/scheduletask.page';
 import UserManagementPage from './pages/User/usermanagement.page';
 
+import AddUserComponent from './components/addUser/addUser.component'
 import Topbar from './components/Topbar/topbar.component';
 import AddUserComponent from './components/addUser/addUser.component'
 
