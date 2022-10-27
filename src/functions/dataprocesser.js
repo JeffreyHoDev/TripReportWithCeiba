@@ -146,7 +146,6 @@ export const processLocationName = async(datasets) => {
                 "longitude": parseFloat(item.gpslng)
             }
             const data = await CALLGoogleGeoLocationAPI(coordinates)
-            console.log(data)
             if(data.error_message){
                 item["location"] = null
             }else {
