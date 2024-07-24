@@ -13,7 +13,7 @@
     "dotenv": "^16.0.2",
     "excel4node": "^1.8.0",
     "file-saver": "^2.0.5",
-    "gh-pages": "^4.0.0",
+    "gh-pages": ">=5.0.0",
     "haversine": "^1.1.1",
     "node-fetch": "^3.2.10",
     "nodemailer": "^6.7.8",
